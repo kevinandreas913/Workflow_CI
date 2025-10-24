@@ -58,7 +58,6 @@ def hitung_metrik(X_train, y_train, X_test, y_test, model):
         "train_precision": train_precision,
     }
 
-
 def main(data_file, scaler_file):
     warnings.filterwarnings("ignore")
     
