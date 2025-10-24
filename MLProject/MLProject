@@ -5,6 +5,6 @@ conda_env: conda.yaml
 entry_points:
   main:
     parameters:
-      dataset: {type: str, default: "diabetes_cleaned.csv"}
-      ncomps: {type: int, default: 3}
-    command: "python modelling.py --dataset {dataset} --ncomps {ncomps}"
+      data_file: {type: str, default: "diabetes_cleaned.csv"}
+      scaler_file: {type: str, default: "minmax_scaler.joblib"}
+    command: "python modelling.py --data_file {data_file} --scaler_file {scaler_file}"
