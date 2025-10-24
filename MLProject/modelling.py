@@ -115,7 +115,7 @@ def main(data_file, scaler_file):
             
             run_name = f"run_fit_intercept{fit_intercept}_positive{positive}"
             
-            with mlflow.start_run(run_name=run_name):
+            with mlflow.start_run(run_name=run_name, nested=True):
                 params = {
                     "fit_intercept": fit_intercept, 
                     "positive": positive
