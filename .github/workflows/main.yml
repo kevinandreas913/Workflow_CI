@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install -r ${{ env.PROJECT_DIR }}/requirements.txt
+          pip install -r ${{ env.PROJECT_DIR }}/conda.yaml
 
       - name: Run MLProject
         run: |
