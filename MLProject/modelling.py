@@ -61,7 +61,6 @@ def hitung_metrik(X_train, y_train, X_test, y_test, model):
 def main(data_file, scaler_file):
     warnings.filterwarnings("ignore")
     
-    mlflow.set_experiment("Diabetes Classification - Skilled Tuning")
     print("MLflow experiment set to 'Diabetes Classification - Skilled Tuning'")
 
     try:
