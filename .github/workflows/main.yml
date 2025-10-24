@@ -72,7 +72,10 @@ jobs:
 
       - name: Build Docker Model
         run: |
-          mlflow models build-docker --model-uri "runs:/$RUN_ID/artifacts/model" --name $CONTAINER_NAME
+          MODEL_PATH=$(find mlruns/0/models -type d -name "m-*" | sort | tail -n 1)
+          echo "Detected model path: $MODEL_PATH"
+          mlflow models build-docker --model-uri "file://$MODEL_PATH" --name $CONTAINER_NAME
+
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
