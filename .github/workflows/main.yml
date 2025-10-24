@@ -75,29 +75,25 @@ jobs:
           echo "============================="
           echo "📂 Step: Checking mlruns structure"
           echo "============================="
-          
-          echo "Current working directory:"
           pwd
-          echo
-          echo "Listing top-level files:"
           ls -al
           echo
-          echo "Listing mlruns/0 structure:"
           ls -R mlruns/0 || echo "❌ Directory mlruns/0 not found!"
           echo
+
           echo "============================="
-          echo "🔍 Step: Detect model folder"
+          echo "🔍 Step: Detect model folder (adjusted for mlruns/0/models)"
           echo "============================="
 
-          # cari folder model di bawah artifacts
-          MODEL_PATH=$(find mlruns/0 -type d -path "*/artifacts/model" | sort | tail -n 1)
-          
+          # Cari folder yang mengandung MLmodel langsung di artifacts/
+          MODEL_PATH=$(find mlruns/0/models -type f -name "MLmodel" -printf "%h\n" | sort | tail -n 1)
+
           if [ -z "$MODEL_PATH" ]; then
-            echo "❌ No model folder found under mlruns/0/**/artifacts/model"
+            echo "❌ No model folder found inside mlruns/0/models/**/artifacts/"
             exit 1
           fi
 
-          ABS_PATH=$(realpath $MODEL_PATH)
+          ABS_PATH=$(realpath "$MODEL_PATH")
           echo "✅ Detected model path: $ABS_PATH"
           echo
           echo "============================="
@@ -105,12 +101,10 @@ jobs:
           echo "============================="
           ls -al "$ABS_PATH"
           echo
-
           echo "============================="
           echo "🐳 Step: Building Docker image from MLflow model"
           echo "============================="
           mlflow models build-docker --model-uri "file://$ABS_PATH" --name $CONTAINER_NAME
-
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
