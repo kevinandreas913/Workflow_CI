@@ -1,0 +1,10 @@
+name: diabetes-classification
+
+conda_env: conda.yaml
+
+entry_points:
+  main:
+    parameters:
+      dataset: {type: str, default: "diabetes_cleaned.csv"}
+      ncomps: {type: int, default: 3}
+    command: "python modelling.py --dataset {dataset} --ncomps {ncomps}"
