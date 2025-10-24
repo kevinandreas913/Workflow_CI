@@ -70,12 +70,47 @@ jobs:
           echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
           echo "Latest run_id: $RUN_ID (from $LATEST_RUN_DIR)"
 
-      - name: Build Docker Model
+      - name: Build Docker Model (with debug)
         run: |
-          MODEL_PATH=$(find mlruns/0/models -type d -name "m-*" | sort | tail -n 1)
+          echo "============================="
+          echo "📂 Step: Checking mlruns structure"
+          echo "============================="
+          
+          echo "Current working directory:"
+          pwd
+          echo
+          echo "Listing top-level files:"
+          ls -al
+          echo
+          echo "Listing mlruns/0 structure:"
+          ls -R mlruns/0 || echo "❌ Directory mlruns/0 not found!"
+          echo
+          echo "============================="
+          echo "🔍 Step: Detect model folder"
+          echo "============================="
+
+          # cari folder model di bawah artifacts
+          MODEL_PATH=$(find mlruns/0 -type d -path "*/artifacts/model" | sort | tail -n 1)
+          
+          if [ -z "$MODEL_PATH" ]; then
+            echo "❌ No model folder found under mlruns/0/**/artifacts/model"
+            exit 1
+          fi
+
           ABS_PATH=$(realpath $MODEL_PATH)
-          echo "Detected model path: $ABS_PATH"
+          echo "✅ Detected model path: $ABS_PATH"
+          echo
+          echo "============================="
+          echo "📁 Step: Show model folder content"
+          echo "============================="
+          ls -al "$ABS_PATH"
+          echo
+
+          echo "============================="
+          echo "🐳 Step: Building Docker image from MLflow model"
+          echo "============================="
           mlflow models build-docker --model-uri "file://$ABS_PATH" --name $CONTAINER_NAME
+
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
